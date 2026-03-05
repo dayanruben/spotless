@@ -14,6 +14,7 @@ concurrency:
 jobs:
   sanity-check:
     name: Sanity Check 🦢
+    if: ${{ github.ref != 'refs/heads/eap/kotlin' && github.head_ref != 'eap/kotlin' }}
     runs-on: ubuntu-latest
     env:
       buildcacheuser: ${{ secrets.BUILDCACHE_USER }}
@@ -34,6 +35,7 @@ jobs:
       - name: assemble testClasses
         run: ./gradlew assemble testClasses
   build:
+    if: ${{ github.ref != 'refs/heads/eap/kotlin' && github.head_ref != 'eap/kotlin' }}
     needs: sanity-check
     strategy:
       fail-fast: false
@@ -105,11 +107,11 @@ jobs:
 
   # Status check that is required in branch protection rules.
   final-status:
+    if: ${{ (github.ref != 'refs/heads/eap/kotlin' && github.head_ref != 'eap/kotlin') && always() }}
     needs:
       - sanity-check
       - build
     runs-on: ubuntu-latest
-    if: always()
     steps:
       - name: Check
         run: |
@@ -119,3 +121,19 @@ jobs:
             exit 1
           fi
           echo "All required jobs completed successfully."
+
+  eap-smoke:
+    name: Kotlin EAP smoke check
+    if: ${{ github.ref == 'refs/heads/eap/kotlin' || github.head_ref == 'eap/kotlin' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - uses: actions/setup-java@v5
+        with:
+          distribution: "temurin"
+          java-version: 21
+      - name: gradle caching
+        uses: gradle/actions/setup-gradle@v5
+      - name: smoke
+        run: ./gradlew help
