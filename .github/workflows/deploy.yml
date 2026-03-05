@@ -26,7 +26,6 @@ on:
 
 jobs:
   build:
-    if: github.repository == 'diffplug/spotless'
     runs-on: ubuntu-latest
     name: deploy
     permissions:
