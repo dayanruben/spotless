@@ -65,11 +65,13 @@ jobs:
       - name: gradle caching
         uses: gradle/actions/setup-gradle@v5
       - name: build (maven-only)
+        if: matrix.kind == 'maven'
         run: ./gradlew :plugin-maven:build -x spotlessCheck
       - name: build (everything-but-maven)
         if: matrix.kind == 'gradle'
         run: ./gradlew build -x spotlessCheck -PSPOTLESS_EXCLUDE_MAVEN=true
       - name: test npm
+        if: matrix.kind == 'npm'
         run: ./gradlew testNpm
       - name: Setup go
         if: matrix.kind == 'shfmt'
@@ -81,6 +83,7 @@ jobs:
         run: |
           go install mvdan.cc/sh/v3/cmd/shfmt@${{ matrix.shfmt-version }}
       - name: Test shfmt
+        if: matrix.kind == 'shfmt'
         run: ./gradlew testShfmt
       - name: Test idea
         if: matrix.kind == 'idea'
