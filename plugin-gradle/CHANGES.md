@@ -4,6 +4,7 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 
 ## [Unreleased]
 ### Added
+- `scalafmt()` now reads the version from the `version` field in the scalafmt config file when no version is explicitly set in the plugin config, falling back to the built-in default only if neither is available. ([#2922](https://github.com/diffplug/spotless/pull/2922))
 - Add `withIndentStyle` and `withIndentSize` configuration to `tableTestFormatter` for setting the fallback indent when no `.editorconfig` is found. ([#2893](https://github.com/diffplug/spotless/pull/2893))
 - Add `javaparserVersion(...)` to `cleanthat`, allowing users to override the JavaParser version pulled in transitively by Cleanthat. ([#2903](https://github.com/diffplug/spotless/pull/2903))
 ### Fixed
