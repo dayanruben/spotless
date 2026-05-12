@@ -92,30 +92,53 @@ class MultiProjectTest extends GradleIntegrationHarness {
 	}
 
 	@Test
-	public void predeclaredSucceeds() throws IOException {
+	public void predeclaredSucceeds_deprecatedAPI() throws IOException {
 		setFile("build.gradle").toLines(
 				"plugins {",
 				"    id 'com.diffplug.spotless'",
 				"}",
 				"repositories { mavenCentral() }",
 				"spotless { predeclareDeps() }",
+				"",
 				"spotlessPredeclare {",
-				" java { googleJavaFormat('1.17.0') }",
+				"    java { googleJavaFormat('1.17.0') }",
 				"}");
 		createNSubprojects();
 		gradleRunner().withArguments("spotlessApply").build();
 	}
 
 	@Test
-	public void predeclaredFromBuildscriptSucceeds() throws IOException {
+	public void predeclaredFromBuildscriptSucceeds_deprecatedAPI() throws IOException {
 		setFile("build.gradle").toLines(
+				"buildscript {",
+				"    repositories { mavenCentral() }",
+				"}",
 				"plugins {",
 				"    id 'com.diffplug.spotless'",
 				"}",
 				"repositories { mavenCentral() }",
 				"spotless { predeclareDepsFromBuildscript() }",
 				"spotlessPredeclare {",
-				" java { googleJavaFormat('1.17.0') }",
+				"    java { googleJavaFormat('1.17.0') }",
+				"}");
+		createNSubprojects();
+		gradleRunner().withArguments("spotlessApply").build();
+	}
+
+	@Test
+	public void predeclaredFromBuildscriptInPredeclareBlockSucceeds() throws IOException {
+		setFile("build.gradle").toLines(
+				"buildscript {",
+				"    repositories { mavenCentral() }",
+				"}",
+				"plugins {",
+				"    id 'com.diffplug.spotless'",
+				"}",
+				"repositories { mavenCentral() }",
+				"",
+				"spotlessPredeclare {",
+				"    fromBuildscriptRepositories()",
+				"    java { googleJavaFormat('1.17.0') }",
 				"}");
 		createNSubprojects();
 		gradleRunner().withArguments("spotlessApply").build();
@@ -167,7 +190,7 @@ class MultiProjectTest extends GradleIntegrationHarness {
 	}
 
 	@Test
-	public void predeclaredUndeclared() throws IOException {
+	public void predeclaredWithoutSpotlessBlockSucceeds() throws IOException {
 		setFile("build.gradle").toLines(
 				"plugins {",
 				"    id 'com.diffplug.spotless'",
@@ -177,7 +200,6 @@ class MultiProjectTest extends GradleIntegrationHarness {
 				" java { googleJavaFormat('1.17.0') }",
 				"}");
 		createNSubprojects();
-		Assertions.assertThat(gradleRunner().withArguments("spotlessApply").buildAndFail().getOutput())
-				.contains("spotlessPredeclare requires `spotless { predeclareDeps() }` or `spotless { predeclareDepsFromBuildscript() }` in the root project.");
+		gradleRunner().withArguments("spotlessApply").build();
 	}
 }

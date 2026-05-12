@@ -30,15 +30,13 @@ import com.diffplug.spotless.LazyForwardingEquality;
 public class SpotlessExtensionPredeclare extends SpotlessExtension {
 	private final SortedMap<String, FormatExtension> toSetup = new TreeMap<>();
 	private @Nullable GradleProvisioner.Policy policy;
+	private boolean policyExplicit;
 	private @Nullable RegisterDependenciesTask registerDependenciesTask;
 
 	public SpotlessExtensionPredeclare(Project project) {
 		super(project);
 		project.afterEvaluate(unused -> {
 			if (policy == null) {
-				if (!toSetup.isEmpty()) {
-					throw new GradleException("spotlessPredeclare requires `spotless { predeclareDeps() }` or `spotless { predeclareDepsFromBuildscript() }` in the root project.");
-				}
 				return;
 			}
 			RegisterDependenciesTask task = registerDependenciesTask;
@@ -56,27 +54,67 @@ public class SpotlessExtensionPredeclare extends SpotlessExtension {
 		});
 	}
 
-	public SpotlessExtensionPredeclare(Project project, GradleProvisioner.Policy policy) {
-		this(project);
-		enablePredeclare(policy);
-	}
-
 	@Override
 	protected void createFormatTasks(String name, FormatExtension formatExtension) {
+		enablePredeclareIfAbsent(GradleProvisioner.Policy.ROOT_PROJECT);
 		toSetup.put(name, formatExtension);
 	}
 
 	@Override
-	protected void predeclare(GradleProvisioner.Policy policy) {
+	void predeclare(GradleProvisioner.Policy policy) {
 		throw new UnsupportedOperationException("predeclare can't be called from within `" + EXTENSION_PREDECLARE + "`");
 	}
 
+	/**
+	 * Resolves predeclared dependencies from the root project's repositories.
+	 * <p>
+	 * This is the default behavior when any format is declared in {@code spotlessPredeclare}.
+	 *
+	 * @see SpotlessExtension#predeclareDeps()
+	 */
+	public void fromProjectRepositories() {
+		enablePredeclare(GradleProvisioner.Policy.ROOT_PROJECT);
+	}
+
+	/**
+	 * Resolves predeclared dependencies from the root project's {@code buildscript} repositories.
+	 * <p>
+	 * Use this when formatter dependencies should be resolved from {@code buildscript { repositories { ... } }}
+	 * instead of the root project's normal repositories.
+	 *
+	 * @see SpotlessExtension#predeclareDepsFromBuildscript()
+	 */
+	public void fromBuildscriptRepositories() {
+		enablePredeclare(GradleProvisioner.Policy.ROOT_BUILDSCRIPT);
+	}
+
 	void enablePredeclare(GradleProvisioner.Policy policy) {
+		enablePredeclare(policy, true);
+	}
+
+	private void enablePredeclareIfAbsent(GradleProvisioner.Policy policy) {
+		enablePredeclare(policy, false);
+	}
+
+	private void enablePredeclare(GradleProvisioner.Policy policy, boolean explicit) {
 		if (this.policy != null) {
-			throw new GradleException("predeclareDeps can only be called once.");
+			if (!explicit || !policyExplicit) {
+				if (explicit) {
+					this.policy = policy;
+					this.policyExplicit = true;
+					configureProvisioners(policy);
+				}
+				return;
+			}
+			throw new GradleException("predeclared dependency resolution can only be configured once.");
 		}
 		this.policy = policy;
-		this.registerDependenciesTask = findRegisterDepsTask().get();
+		this.policyExplicit = explicit;
+		registerDependenciesTask = findRegisterDepsTask().get();
+		configureProvisioners(policy);
+	}
+
+	private void configureProvisioners(GradleProvisioner.Policy policy) {
 		SpotlessTaskService taskService = getSpotlessTaskService().get();
 		taskService.registerDependenciesTask = registerDependenciesTask;
 		taskService.predeclaredProvisioner = policy.dedupingProvisioner(project);

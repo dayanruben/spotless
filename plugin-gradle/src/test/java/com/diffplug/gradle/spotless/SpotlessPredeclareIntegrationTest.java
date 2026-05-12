@@ -511,20 +511,19 @@ class SpotlessPredeclareIntegrationTest extends GradleIntegrationHarness {
 	@Nested
 	class EdgeCases {
 		@Test
-		void predeclareRequiresPredeclareDepsCall() throws IOException {
+		void predeclareBlockEnablesPredeclareDeps() throws IOException {
 			setFile("build.gradle").toContent("""
 					plugins {
 					    id 'com.diffplug.spotless'
 					}
 					repositories { mavenCentral() }
 					spotlessPredeclare {
-					    java { googleJavaFormat('1.17.0') }
+					    format('misc') { trimTrailingWhitespace() }
 					}
 					""");
 
-			BuildResult result = gradleRunner().withArguments("spotlessApply").buildAndFail();
-			assertThat(result.getOutput())
-					.contains("spotlessPredeclare requires `spotless { predeclareDeps() }` or `spotless { predeclareDepsFromBuildscript() }` in the root project.");
+			BuildResult result = gradleRunner().withArguments("help").build();
+			assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
 		}
 
 		@Test
@@ -554,7 +553,22 @@ class SpotlessPredeclareIntegrationTest extends GradleIntegrationHarness {
 					spotlessPredeclare {
 					    format("misc") { trimTrailingWhitespace() }
 					}
-					spotless { predeclareDeps() }
+					""");
+
+			BuildResult result = gradleRunner().withArguments("help").build();
+			assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
+		}
+
+		@Test
+		void predeclareBlockCanSelectBuildscriptRepositories() throws IOException {
+			setFile("build.gradle.kts").toContent("""
+					plugins {
+					    id("com.diffplug.spotless")
+					}
+					spotlessPredeclare {
+					    format("misc") { trimTrailingWhitespace() }
+					    fromBuildscriptRepositories()
+					}
 					""");
 
 			BuildResult result = gradleRunner().withArguments("help").build();

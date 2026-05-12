@@ -308,21 +308,46 @@ public abstract class SpotlessExtension {
 
 	protected abstract void createFormatTasks(String name, FormatExtension formatExtension);
 
+	/**
+	 * Enables predeclared dependency resolution using the root project's {@code buildscript} repositories.
+	 *
+	 * @deprecated Configure the repository policy directly in {@code spotlessPredeclare} instead:
+	 *             <pre>{@code
+	 *             spotlessPredeclare {
+	 *                 fromBuildscriptRepositories()
+	 *                 java { googleJavaFormat("1.17.0") }
+	 *             }
+	 *             }</pre>
+	 */
+	@Deprecated
 	public void predeclareDepsFromBuildscript() {
 		if (project.getRootProject() != project) {
 			throw new GradleException("predeclareDepsFromBuildscript can only be called from the root project");
 		}
+		project.getLogger().info("predeclareDepsFromBuildscript() is deprecated, use 'spotlessPredeclare { fromBuildscriptRepositories() }' directly instead.");
 		predeclare(GradleProvisioner.Policy.ROOT_BUILDSCRIPT);
 	}
 
+	/**
+	 * Enables predeclared dependency resolution using the root project's repositories.
+	 *
+	 * @deprecated Declare formats directly in {@code spotlessPredeclare} instead:
+	 *             <pre>{@code
+	 *             spotlessPredeclare {
+	 *                 java { googleJavaFormat("1.17.0") }
+	 *             }
+	 *             }</pre>
+	 */
+	@Deprecated
 	public void predeclareDeps() {
 		if (project.getRootProject() != project) {
 			throw new GradleException("predeclareDeps can only be called from the root project");
 		}
+		project.getLogger().info("predeclareDeps() is deprecated, use 'spotlessPredeclare { ... }' directly instead.");
 		predeclare(GradleProvisioner.Policy.ROOT_PROJECT);
 	}
 
-	protected void predeclare(GradleProvisioner.Policy policy) {
+	void predeclare(GradleProvisioner.Policy policy) {
 		project.getExtensions().getByType(SpotlessExtensionPredeclare.class).enablePredeclare(policy);
 	}
 }
