@@ -509,6 +509,82 @@ class SpotlessPredeclareIntegrationTest extends GradleIntegrationHarness {
 	}
 
 	@Nested
+	class Gradle9Compatibility {
+		@Test
+		void issue2599_Gradle951_FailsWhenPredeclareUsesBuildscriptRepositories() throws IOException {
+			setFile("build.gradle.kts").toContent("""
+					buildscript {
+					    repositories { mavenCentral() }
+					}
+					plugins {
+					    id("com.diffplug.spotless")
+					}
+					spotless {
+					    predeclareDepsFromBuildscript()
+					}
+					spotlessPredeclare {
+					    kotlin { ktfmt("0.56") }
+					}
+					spotless {
+					    kotlin {
+					        target("src/**/*.kt")
+					        ktfmt("0.56")
+					    }
+					}
+					""");
+			setFile("src/main/kotlin/basic.kt").toResource("kotlin/ktfmt/basic.dirty");
+
+			BuildResult result = gradleRunner()
+					.withGradleVersion("9.5.1")
+					.withArguments("spotlessApply", "--stacktrace")
+					.buildAndFail();
+
+			assertThat(result.getOutput())
+					.contains("Execution failed for task ':spotlessInternalRegisterDependencies'")
+					.contains("Cannot mutate configuration container for buildscript")
+					.contains("Configurations cannot be added or removed from the buildscript configuration container.");
+		}
+
+		@Test
+		void gradle951CanUsePredeclareWithProjectRepositories() throws IOException {
+			setFile("build.gradle.kts").toContent("""
+					plugins {
+					    id("com.diffplug.spotless")
+					}
+					repositories { mavenCentral() }
+					spotless {
+					    predeclareDeps()
+					}
+					spotlessPredeclare {
+					    kotlin { ktfmt("0.56") }
+					}
+					spotless {
+					    kotlin {
+					        target("src/**/*.kt")
+					        ktfmt("0.56")
+					    }
+					}
+					""");
+			setFile("src/main/kotlin/basic.kt").toResource("kotlin/ktfmt/basic.dirty");
+
+			BuildResult withoutConfigurationCache = gradleRunner()
+					.withGradleVersion("9.5.1")
+					.withArguments("spotlessApply", "--stacktrace")
+					.build();
+			assertThat(withoutConfigurationCache.getOutput()).contains("BUILD SUCCESSFUL");
+			assertFile("src/main/kotlin/basic.kt").sameAsResource("kotlin/ktfmt/basic.clean");
+
+			setFile("src/main/kotlin/basic.kt").toResource("kotlin/ktfmt/basic.dirty");
+			BuildResult withConfigurationCache = gradleRunner()
+					.withGradleVersion("9.5.1")
+					.withArguments("spotlessApply", "--configuration-cache", "--stacktrace")
+					.build();
+			assertThat(withConfigurationCache.getOutput()).contains("BUILD SUCCESSFUL");
+			assertFile("src/main/kotlin/basic.kt").sameAsResource("kotlin/ktfmt/basic.clean");
+		}
+	}
+
+	@Nested
 	class EdgeCases {
 		@Test
 		void predeclareRequiresPredeclareDepsCall() throws IOException {
