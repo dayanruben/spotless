@@ -40,6 +40,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
+import org.apache.maven.execution.MavenSession;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Component;
@@ -108,6 +109,9 @@ public abstract class AbstractSpotlessMojo extends AbstractMojo {
 
 	@Component
 	protected BuildContext buildContext;
+
+	@Component
+	private MavenSession mavenSession;
 
 	@Parameter(defaultValue = "${mojoExecution.goal}", required = true, readonly = true)
 	private String goal;
@@ -406,10 +410,11 @@ public abstract class AbstractSpotlessMojo extends AbstractMojo {
 		P2Provisioner p2Provisioner = P2Provisioner.createDefault();
 		List<FormatterStepFactory> formatterStepFactories = getFormatterStepFactories();
 		FileLocator fileLocator = getFileLocator();
+		final Optional<String> userRatchetFrom = Optional.ofNullable((String) mavenSession.getUserProperties().get("ratchetFrom"));
 		final Optional<String> optionalRatchetFrom = Optional.ofNullable(this.ratchetFrom)
 				.filter(ratchet -> !RATCHETFROM_NONE.equals(ratchet));
 		Optional<Set<File>> projectClasspath = computeTypeSolverClasspath(resolver);
-		return new FormatterConfig(baseDir, encoding, lineEndings, optionalRatchetFrom, provisioner, p2Provisioner, fileLocator, formatterStepFactories, Optional.ofNullable(setLicenseHeaderYearsFromGitHistory), lintSuppressions, projectClasspath);
+		return new FormatterConfig(baseDir, encoding, lineEndings, userRatchetFrom, optionalRatchetFrom, provisioner, p2Provisioner, fileLocator, formatterStepFactories, Optional.ofNullable(setLicenseHeaderYearsFromGitHistory), lintSuppressions, projectClasspath);
 	}
 
 	private Optional<Set<File>> computeTypeSolverClasspath(ArtifactResolver resolver) {

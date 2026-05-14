@@ -1,5 +1,5 @@
 /*
- * Copyright 2024-2025 DiffPlug
+ * Copyright 2024-2026 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 package com.diffplug.spotless.extra.glue.jdt;
 
+import java.text.Collator;
 import java.util.Comparator;
 import java.util.List;
 import java.util.StringTokenizer;
@@ -61,6 +62,7 @@ class DefaultJavaElementComparator implements Comparator<BodyDeclaration> {
 	private final int[] memberCategoryOffsets;
 	private final boolean sortByVisibility;
 	private final int[] visibilityOffsets;
+	private final Collator collator;
 
 	static DefaultJavaElementComparator of(
 			boolean doNotSortFields,
@@ -95,6 +97,7 @@ class DefaultJavaElementComparator implements Comparator<BodyDeclaration> {
 		this.memberCategoryOffsets = memberCategoryOffsets;
 		this.sortByVisibility = sortByVisibility;
 		this.visibilityOffsets = visibilityOffsets;
+		this.collator = Collator.getInstance();
 	}
 
 	@SuppressFBWarnings(value = "SF_SWITCH_NO_DEFAULT", justification = "we only accept valid tokens in the order string, otherwise we fall back to default value")
@@ -271,7 +274,7 @@ class DefaultJavaElementComparator implements Comparator<BodyDeclaration> {
 			String name2 = method2.getName().getIdentifier();
 
 			// method declarations (constructors) are sorted by name
-			int cmp = name1.compareTo(name2);
+			int cmp = collator.compare(name1, name2);
 			if (cmp != 0) {
 				return cmp;
 			}
@@ -286,7 +289,7 @@ class DefaultJavaElementComparator implements Comparator<BodyDeclaration> {
 			for (int i = 0; i < len; i++) {
 				SingleVariableDeclaration param1 = parameters1.get(i);
 				SingleVariableDeclaration param2 = parameters2.get(i);
-				cmp = buildSignature(param1.getType()).compareTo(buildSignature(param2.getType()));
+				cmp = collator.compare(buildSignature(param1.getType()), buildSignature(param2.getType()));
 				if (cmp != 0) {
 					return cmp;
 				}
@@ -377,7 +380,7 @@ class DefaultJavaElementComparator implements Comparator<BodyDeclaration> {
 	}
 
 	private int compareNames(BodyDeclaration bodyDeclaration1, BodyDeclaration bodyDeclaration2, String name1, String name2) {
-		int cmp = name1.compareTo(name2);
+		int cmp = collator.compare(name1, name2);
 		if (cmp != 0) {
 			return cmp;
 		}

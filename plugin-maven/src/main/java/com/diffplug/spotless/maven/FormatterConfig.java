@@ -31,6 +31,7 @@ public class FormatterConfig {
 
 	private final String encoding;
 	private final LineEnding lineEndings;
+	private final Optional<String> userRatchetFrom;
 	private final Optional<String> ratchetFrom;
 	private final Provisioner provisioner;
 	private final P2Provisioner p2Provisioner;
@@ -40,10 +41,11 @@ public class FormatterConfig {
 	private final List<LintSuppression> lintSuppressions;
 	private final Optional<Set<File>> projectClasspath;
 
-	public FormatterConfig(File baseDir, String encoding, LineEnding lineEndings, Optional<String> ratchetFrom, Provisioner provisioner,
+	public FormatterConfig(File baseDir, String encoding, LineEnding lineEndings, Optional<String> userRatchetFrom, Optional<String> ratchetFrom, Provisioner provisioner,
 			P2Provisioner p2Provisioner, FileLocator fileLocator, List<FormatterStepFactory> globalStepFactories, Optional<String> spotlessSetLicenseHeaderYearsFromGitHistory, List<LintSuppression> lintSuppressions, Optional<Set<File>> projectClasspath) {
 		this.encoding = encoding;
 		this.lineEndings = lineEndings;
+		this.userRatchetFrom = userRatchetFrom;
 		this.ratchetFrom = ratchetFrom;
 		this.provisioner = provisioner;
 		this.p2Provisioner = p2Provisioner;
@@ -60,6 +62,10 @@ public class FormatterConfig {
 
 	public LineEnding getLineEndings() {
 		return lineEndings;
+	}
+
+	public Optional<String> getUserRatchetFrom() {
+		return userRatchetFrom;
 	}
 
 	public Optional<String> getRatchetFrom() {
