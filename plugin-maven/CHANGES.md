@@ -5,6 +5,7 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 ## [Unreleased]
 ### Added
 - `<scalafmt>` now reads the version from the `version` field in the scalafmt config file when no `<version>` is explicitly set, falling back to the built-in default only if neither is available. ([#2922](https://github.com/diffplug/spotless/pull/2922))
+- Add `<toml>` format type with `<versionCatalog>` step for formatting and sorting Gradle version catalog files. ([#2916](https://github.com/diffplug/spotless/issues/2916))
 - Add `<javaparserVersion>` option to `<cleanthat>`, allowing users to override the JavaParser version pulled in transitively by Cleanthat. ([#2903](https://github.com/diffplug/spotless/pull/2903))
 ### Fixed
 - Fix non-idempotent formatting when `importOrder()` is combined with `greclipse()`: a single catch-all group no longer strips blank lines that `greclipse()` independently inserted between import groups. ([#2914](https://github.com/diffplug/spotless/pull/2914))
