@@ -7,6 +7,7 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 - `<scalafmt>` now reads the version from the `version` field in the scalafmt config file when no `<version>` is explicitly set, falling back to the built-in default only if neither is available. ([#2922](https://github.com/diffplug/spotless/pull/2922))
 - Add `<toml>` format type with `<versionCatalog>` step for formatting and sorting Gradle version catalog files. ([#2916](https://github.com/diffplug/spotless/issues/2916))
 - Add `<javaparserVersion>` option to `<cleanthat>`, allowing users to override the JavaParser version pulled in transitively by Cleanthat. ([#2903](https://github.com/diffplug/spotless/pull/2903))
+- Add a `expandWildcardImports` API for java ([#2829](https://github.com/diffplug/spotless/pull/2930))
 ### Fixed
 - Preserve case of JDBI named bind params that collide with SQL keywords (e.g. `:limit`, `:offset`) in the DBeaver SQL formatter. ([#2899](https://github.com/diffplug/spotless/pull/2899))
 - The `-Dspotless.ratchetFrom=...` user property now takes priority over `<ratchetFrom>` configured in the plugin or in individual formatters, instead of being overridden by them. ([#2896](https://github.com/diffplug/spotless/pull/2896), fixes [#2842](https://github.com/diffplug/spotless/issues/2842))

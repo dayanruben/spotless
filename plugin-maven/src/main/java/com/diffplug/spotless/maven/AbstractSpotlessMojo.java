@@ -27,6 +27,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -412,7 +413,36 @@ public abstract class AbstractSpotlessMojo extends AbstractMojo {
 		final Optional<String> userRatchetFrom = Optional.ofNullable((String) mavenSession.getUserProperties().get("ratchetFrom"));
 		final Optional<String> optionalRatchetFrom = Optional.ofNullable(this.ratchetFrom)
 				.filter(ratchet -> !RATCHETFROM_NONE.equals(ratchet));
-		return new FormatterConfig(baseDir, encoding, lineEndings, userRatchetFrom, optionalRatchetFrom, provisioner, p2Provisioner, fileLocator, formatterStepFactories, Optional.ofNullable(setLicenseHeaderYearsFromGitHistory), lintSuppressions);
+		Optional<Set<File>> projectClasspath = computeTypeSolverClasspath(resolver);
+		return new FormatterConfig(baseDir, encoding, lineEndings, userRatchetFrom, optionalRatchetFrom, provisioner, p2Provisioner, fileLocator, formatterStepFactories, Optional.ofNullable(setLicenseHeaderYearsFromGitHistory), lintSuppressions, projectClasspath);
+	}
+
+	private Optional<Set<File>> computeTypeSolverClasspath(ArtifactResolver resolver) {
+		Set<File> classpath = new LinkedHashSet<>();
+
+		// Add source roots (directories containing .java files for JavaParserTypeSolver)
+		for (String sourceRoot : project.getCompileSourceRoots()) {
+			File dir = new File(sourceRoot);
+			if (dir.exists()) {
+				classpath.add(dir);
+			}
+		}
+		for (String sourceRoot : project.getTestCompileSourceRoots()) {
+			File dir = new File(sourceRoot);
+			if (dir.exists()) {
+				classpath.add(dir);
+			}
+		}
+
+		// Resolve dependency JARs via RepositorySystem (for JarTypeSolver)
+		try {
+			Set<File> dependencyJars = resolver.resolveProjectDependencies(project, repositories);
+			classpath.addAll(dependencyJars);
+		} catch (Exception e) {
+			getLog().warn("Could not resolve project dependencies for expandWildcardImports: " + e.getMessage());
+		}
+
+		return Optional.of(classpath);
 	}
 
 	private FileLocator getFileLocator() {
