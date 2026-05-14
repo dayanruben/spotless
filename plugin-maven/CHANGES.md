@@ -7,6 +7,7 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 - Add `<toml>` format type with `<versionCatalog>` step for formatting and sorting Gradle version catalog files. ([#2916](https://github.com/diffplug/spotless/issues/2916))
 - Add `<javaparserVersion>` option to `<cleanthat>`, allowing users to override the JavaParser version pulled in transitively by Cleanthat. ([#2903](https://github.com/diffplug/spotless/pull/2903))
 ### Fixed
+- Preserve case of JDBI named bind params that collide with SQL keywords (e.g. `:limit`, `:offset`) in the DBeaver SQL formatter. ([#2899](https://github.com/diffplug/spotless/pull/2899))
 - The `-Dspotless.ratchetFrom=...` user property now takes priority over `<ratchetFrom>` configured in the plugin or in individual formatters, instead of being overridden by them. ([#2896](https://github.com/diffplug/spotless/pull/2896), fixes [#2842](https://github.com/diffplug/spotless/issues/2842))
 - Fix non-idempotent formatting when `importOrder()` is combined with `greclipse()`: a single catch-all group no longer strips blank lines that `greclipse()` independently inserted between import groups. ([#2914](https://github.com/diffplug/spotless/pull/2914))
 ### Changes
