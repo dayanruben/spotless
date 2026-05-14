@@ -17,6 +17,7 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 - Preserve case of JDBI named bind params that collide with SQL keywords (e.g. `:limit`, `:offset`) in the DBeaver SQL formatter. ([#2899](https://github.com/diffplug/spotless/pull/2899))
 - Fix non-idempotent formatting when `importOrder()` is combined with `greclipse()`: a single catch-all group no longer strips blank lines that `greclipse()` independently inserted between import groups. ([#2914](https://github.com/diffplug/spotless/pull/2914))
 ### Changes
+- Fix `expandWildcardImports` failing on JDK XML types such as `org.xml.sax.InputSource`. ([#2921](https://github.com/diffplug/spotless/pull/2921))
 - Use Eclipse JDT's collator-based comparison when sorting Java members to better match Eclipse save actions. ([#2920](https://github.com/diffplug/spotless/pull/2920))
 - Bump default `cleanthat` version `2.24` -> `2.25`. ([#2903](https://github.com/diffplug/spotless/pull/2903))
 - Bump default `eclipse-jdt` version from `4.35` to `4.39`. ([#2912](https://github.com/diffplug/spotless/pull/2912))

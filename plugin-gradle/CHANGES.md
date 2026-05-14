@@ -13,6 +13,7 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 - Fix non-idempotent formatting when `importOrder()` is combined with `greclipse()`: a single catch-all group no longer strips blank lines that `greclipse()` independently inserted between import groups. ([#2914](https://github.com/diffplug/spotless/pull/2914))
 - Fix `predeclareDepsFromBuildscript()` on Gradle 9 by avoiding mutation of the root buildscript configuration container. ([#2929](https://github.com/diffplug/spotless/pull/2929), fixes [#2599](https://github.com/diffplug/spotless/issues/2599))
 ### Changes
+- Fix `expandWildcardImports` failing on JDK XML types such as `org.xml.sax.InputSource`. ([#2921](https://github.com/diffplug/spotless/pull/2921))
 - Use Eclipse JDT's collator-based comparison when sorting Java members to better match Eclipse save actions. ([#2920](https://github.com/diffplug/spotless/pull/2920))
 - Bump default `cleanthat` version `2.24` -> `2.25`. ([#2903](https://github.com/diffplug/spotless/pull/2903))
 - Bump default `eclipse-jdt` version from `4.35` to `4.39`. ([#2912](https://github.com/diffplug/spotless/pull/2912))
