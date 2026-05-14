@@ -10,6 +10,8 @@ This document is intended for Spotless developers.
 We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (starting after version `1.27.0`).
 
 ## [Unreleased]
+
+## [4.6.0] - 2026-05-14
 ### Added
 - `scalafmt()` now reads the version from the `version` field in the scalafmt config file when no version is explicitly set in the plugin config, falling back to the built-in default only if neither is available. ([#2922](https://github.com/diffplug/spotless/pull/2922))
 - Add `versionCatalog` step for formatting and sorting Gradle version catalog (`.toml`) files. ([#2916](https://github.com/diffplug/spotless/issues/2916))
