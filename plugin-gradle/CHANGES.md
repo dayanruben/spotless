@@ -12,6 +12,8 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 ### Changes
 - Bump default `cleanthat` version `2.24` -> `2.25`. ([#2903](https://github.com/diffplug/spotless/pull/2903))
 - Bump default `eclipse-jdt` version from `4.35` to `4.39`. ([#2912](https://github.com/diffplug/spotless/pull/2912))
+- Make `spotlessPredeclare` visible to Gradle Kotlin DSL type-safe accessors. ([#2925](https://github.com/diffplug/spotless/pull/2925))
+- Allow `spotlessPredeclare` to be used directly without enabling it first in spotless extension. ([#2925](https://github.com/diffplug/spotless/pull/2925))
 
 ## [8.4.0] - 2026-03-18
 ### Added

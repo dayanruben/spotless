@@ -511,38 +511,68 @@ class SpotlessPredeclareIntegrationTest extends GradleIntegrationHarness {
 	@Nested
 	class EdgeCases {
 		@Test
-		void predeclareRequiresPredeclareDepsCall() throws IOException {
+		void predeclareBlockEnablesPredeclareDeps() throws IOException {
 			setFile("build.gradle").toContent("""
 					plugins {
 					    id 'com.diffplug.spotless'
 					}
 					repositories { mavenCentral() }
 					spotlessPredeclare {
-					    java { googleJavaFormat('1.17.0') }
+					    format('misc') { trimTrailingWhitespace() }
 					}
 					""");
 
-			BuildResult result = gradleRunner().withArguments("spotlessApply").buildAndFail();
-			assertThat(result.getOutput())
-					.contains("Could not find method spotlessPredeclare() for arguments");
+			BuildResult result = gradleRunner().withArguments("help").build();
+			assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
 		}
 
 		@Test
-		void predeclareBlockMustComeAfterPredeclareDeps() throws IOException {
+		void predeclareBlockCanComeBeforePredeclareDeps() throws IOException {
 			setFile("build.gradle").toContent("""
 					plugins {
 					    id 'com.diffplug.spotless'
 					}
 					repositories { mavenCentral() }
 					spotlessPredeclare {
-					    java { googleJavaFormat('1.17.0') }
+					    format('misc') { trimTrailingWhitespace() }
 					}
 					spotless { predeclareDeps() }
 					""");
 
-			BuildResult result = gradleRunner().withArguments("spotlessApply").buildAndFail();
-			assertThat(result.getOutput())
-					.contains("Could not find method spotlessPredeclare() for arguments");
+			BuildResult result = gradleRunner().withArguments("help").build();
+			assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
+		}
+
+		@Test
+		void predeclareBlockHasKotlinDslAccessor() throws IOException {
+			setFile("build.gradle.kts").toContent("""
+					plugins {
+					    id("com.diffplug.spotless")
+					}
+					repositories { mavenCentral() }
+					spotlessPredeclare {
+					    format("misc") { trimTrailingWhitespace() }
+					}
+					""");
+
+			BuildResult result = gradleRunner().withArguments("help").build();
+			assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
+		}
+
+		@Test
+		void predeclareBlockCanSelectBuildscriptRepositories() throws IOException {
+			setFile("build.gradle.kts").toContent("""
+					plugins {
+					    id("com.diffplug.spotless")
+					}
+					spotlessPredeclare {
+					    format("misc") { trimTrailingWhitespace() }
+					    fromBuildscriptRepositories()
+					}
+					""");
+
+			BuildResult result = gradleRunner().withArguments("help").build();
+			assertThat(result.getOutput()).contains("BUILD SUCCESSFUL");
 		}
 
 		@Test
