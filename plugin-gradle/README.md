@@ -422,7 +422,8 @@ spotless {
     // optional: you can specify a specific version and/or config file
     cleanthat()
       .groupArtifact('io.github.solven-eu.cleanthat:java') // Optional. Default is 'io.github.solven-eu.cleanthat:java'
-      .version('2.8')                                      // You may force a custom version of Cleanthat
+      .version('2.25')                                     // You may force a custom version of Cleanthat
+      .javaparserVersion('3.26.4')                         // Advanced: override the JavaParser version transitively pulled by Cleanthat
       .sourceCompatibility('1.7')                          // default is '1.7'
       .addMutator('SafeAndConsensual')                     // Default includes the SafeAndConsensual composite mutator
       .addMutator('your.custom.MagicMutator')              // List of mutators: https://github.com/solven-eu/cleanthat/blob/master/MUTATORS.generated.MD
@@ -1958,17 +1959,26 @@ spotless {
 By default, Spotless resolves dependencies on a per-project basis. For very large parallel builds, this can sometimes cause problems. As an alternative, Spotless can be configured to resolve all dependencies in the root project like so:
 
 ```gradle
-spotless {
-  ...
-  predeclareDeps()
-}
 spotlessPredeclare {
   java { eclipse() }
   kotlin { ktfmt('0.28') }
 }
 ```
 
-Alternatively, you can also use `predeclareDepsFromBuildscript()` to resolve the dependencies from the buildscript repositories rather than the project repositories.
+By default, `spotlessPredeclare` resolves dependencies from the root project's repositories. Alternatively, you can resolve dependencies from the buildscript repositories rather than the project repositories:
+
+```gradle
+buildscript {
+  repositories { mavenCentral() }
+}
+spotlessPredeclare {
+  fromBuildscriptRepositories()
+  java { eclipse() }
+  kotlin { ktfmt('0.28') }
+}
+```
+
+The older `spotless { predeclareDeps() }` and `spotless { predeclareDepsFromBuildscript() }` APIs are still supported.
 
 If you use this feature, you will get an error if you use a formatter in a subproject which is not declared in the `spotlessPredeclare` block.
 
