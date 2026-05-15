@@ -3,6 +3,8 @@
 We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (starting after version `1.27.0`).
 
 ## [Unreleased]
+### Fixed
+- `<licenseHeader>` with `<yearMode>SET_FROM_GIT</yearMode>` no longer runs `git log` through a shell, eliminating a shell-injection vector when formatting files whose names contain shell metacharacters.
 
 ## [3.5.0] - 2026-05-14
 ### Added
