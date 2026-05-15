@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2026 DiffPlug
+ * Copyright 2026 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,25 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.spotless.maven.scala;
-
-import java.io.File;
+package com.diffplug.spotless.maven.toml;
 
 import org.apache.maven.plugins.annotations.Parameter;
 
 import com.diffplug.spotless.FormatterStep;
 import com.diffplug.spotless.maven.FormatterStepConfig;
 import com.diffplug.spotless.maven.FormatterStepFactory;
-import com.diffplug.spotless.scala.ScalaFmtStep;
+import com.diffplug.spotless.toml.VersionCatalogStep;
 
-public class Scalafmt implements FormatterStepFactory {
-
-	@Parameter
-	private String file;
+public class VersionCatalog implements FormatterStepFactory {
 
 	@Parameter
-	private String version;
+	private boolean stripQuotedKeys;
 
 	@Parameter
-	private String scalaMajorVersion;
+	private int maxLineLength = 120;
 
 	@Override
 	public FormatterStep newFormatterStep(FormatterStepConfig config) {
-		File configFile = config.getFileLocator().locateFile(file);
-		return ScalaFmtStep.create(version, scalaMajorVersion, config.getProvisioner(), configFile);
+		return VersionCatalogStep.create(stripQuotedKeys, maxLineLength);
 	}
 }

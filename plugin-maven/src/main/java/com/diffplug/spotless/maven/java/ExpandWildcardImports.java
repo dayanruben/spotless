@@ -1,5 +1,5 @@
 /*
- * Copyright 2016-2026 DiffPlug
+ * Copyright 2025-2026 DiffPlug
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,31 +13,21 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.diffplug.spotless.maven.scala;
+package com.diffplug.spotless.maven.java;
 
 import java.io.File;
-
-import org.apache.maven.plugins.annotations.Parameter;
+import java.util.Collections;
+import java.util.Set;
 
 import com.diffplug.spotless.FormatterStep;
+import com.diffplug.spotless.java.ExpandWildcardImportsStep;
 import com.diffplug.spotless.maven.FormatterStepConfig;
 import com.diffplug.spotless.maven.FormatterStepFactory;
-import com.diffplug.spotless.scala.ScalaFmtStep;
 
-public class Scalafmt implements FormatterStepFactory {
-
-	@Parameter
-	private String file;
-
-	@Parameter
-	private String version;
-
-	@Parameter
-	private String scalaMajorVersion;
-
+public class ExpandWildcardImports implements FormatterStepFactory {
 	@Override
 	public FormatterStep newFormatterStep(FormatterStepConfig config) {
-		File configFile = config.getFileLocator().locateFile(file);
-		return ScalaFmtStep.create(version, scalaMajorVersion, config.getProvisioner(), configFile);
+		Set<File> classpath = config.getProjectClasspath().orElse(Collections.emptySet());
+		return ExpandWildcardImportsStep.create(classpath, config.getProvisioner());
 	}
 }
