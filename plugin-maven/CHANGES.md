@@ -5,6 +5,7 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 ## [Unreleased]
 ### Fixed
 - `<licenseHeader>` with `<yearMode>SET_FROM_GIT</yearMode>` no longer runs `git log` through a shell, eliminating a shell-injection vector when formatting files whose names contain shell metacharacters.
+- Bump transitive `plexus-utils` `4.0.2` -> `4.0.3` to address [CVE-2025-67030](https://github.com/advisories/GHSA-6fmv-xxpf-w3cw). ([#2919](https://github.com/diffplug/spotless/issues/2919))
 
 ## [3.5.0] - 2026-05-14
 ### Added

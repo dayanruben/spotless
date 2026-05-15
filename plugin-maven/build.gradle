@@ -34,6 +34,7 @@ dependencies {
 	implementation libs.durian.io
 	implementation libs.durian.collect
 	implementation libs.plexus.resources
+	implementation libs.plexus.utils
 	implementation libs.jgit
 	implementation libs.plexus.build.api
 
