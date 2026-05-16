@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.time.YearMonth;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -34,7 +35,6 @@ import javax.annotation.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.diffplug.spotless.FileSignature;
 import com.diffplug.spotless.FormatterFunc;
 import com.diffplug.spotless.FormatterStep;
 import com.diffplug.spotless.LineEnding;
@@ -420,14 +420,14 @@ public final class LicenseHeaderStep {
 
 			String oldYear;
 			try {
-				oldYear = parseYear("git log --follow --find-renames=40% --diff-filter=A", file);
+				oldYear = parseYear(Arrays.asList("git", "log", "--follow", "--find-renames=40%", "--diff-filter=A"), file);
 			} catch (IllegalArgumentException e) {
 				// Ideally, git log would always find the commit where it was added.
 				// For some reason, that is sometimes not possible - in that case,
 				// we'll settle for just the most recent, even if it was just a modification.
-				oldYear = parseYear("git log --follow --find-renames=40% --reverse", file);
+				oldYear = parseYear(Arrays.asList("git", "log", "--follow", "--find-renames=40%", "--reverse"), file);
 			}
-			String newYear = parseYear("git log --max-count=1", file);
+			String newYear = parseYear(Arrays.asList("git", "log", "--max-count=1"), file);
 			String yearRange;
 			if (oldYear.equals(newYear)) {
 				yearRange = oldYear;
@@ -450,14 +450,12 @@ public final class LicenseHeaderStep {
 			return FILENAME_PATTERN.matcher(header).replaceAll(file.getName()) + content;
 		}
 
-		private static String parseYear(String cmd, File file) throws IOException {
-			String fullCmd = cmd + " -- " + file.getAbsolutePath();
-			ProcessBuilder builder = new ProcessBuilder().directory(file.getParentFile());
-			if (FileSignature.machineIsWin()) {
-				builder.command("cmd", "/c", fullCmd);
-			} else {
-				builder.command("bash", "-c", fullCmd);
-			}
+		private static String parseYear(List<String> cmd, File file) throws IOException {
+			List<String> fullCmd = new ArrayList<>(cmd.size() + 2);
+			fullCmd.addAll(cmd);
+			fullCmd.add("--");
+			fullCmd.add(file.getAbsolutePath());
+			ProcessBuilder builder = new ProcessBuilder().directory(file.getParentFile()).command(fullCmd);
 			Process process = builder.start();
 			String output = drain(process.getInputStream());
 			String error = drain(process.getErrorStream());

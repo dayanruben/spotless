@@ -10,6 +10,8 @@ This document is intended for Spotless developers.
 We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (starting after version `1.27.0`).
 
 ## [Unreleased]
+### Fixed
+- `LicenseHeaderStep` in `SET_FROM_GIT` year mode no longer invokes `git log` through `bash -c` / `cmd /c`, eliminating a shell-injection vector when processing repositories that contain files whose names include shell metacharacters.
 
 ## [4.6.0] - 2026-05-14
 ### Added
