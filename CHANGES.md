@@ -10,8 +10,14 @@ This document is intended for Spotless developers.
 We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (starting after version `1.27.0`).
 
 ## [Unreleased]
+
+## [4.9.0] - 2026-07-27
+### Added
+- Add support for Java formatting via [`prince-of-space`](https://github.com/agustafson/prince-of-space). ([#2991](https://github.com/diffplug/spotless/pull/2991))
 ### Changes
+- Replace RDF formatter library `de.atextor:turtle-formatter` (discontinued) with `cool.rdf:cool-rdf-formatter` (its new coordinates); the RDF/turtle formatter now requires Java 25+. ([#2995](https://github.com/diffplug/spotless/pull/2995))
 - Bump default `greclipse` version to latest `4.39` -> `4.40`. ([#2989](https://github.com/diffplug/spotless/pull/2989))
+- Bump default `tabletest-formatter` version `1.1.1` -> `1.1.2`.
 
 ## [4.8.0] - 2026-06-29
 ### Added
