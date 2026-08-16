@@ -754,7 +754,7 @@ Additionally, `editorConfigOverride` options will override what's supplied in `.
 
 ```xml
 <adocfmt>
-  <version>0.2.0</version> <!-- optional -->
+  <version>0.3.1</version> <!-- optional -->
   <normalizeSetextHeadings>true</normalizeSetextHeadings>       <!-- convert === underlines to ATX == (default: true) -->
   <collapseConsecutiveBlankLines>true</collapseConsecutiveBlankLines> <!-- max 1 blank line (default: true) -->
   <oneSentencePerLine>true</oneSentencePerLine>            <!-- each sentence on its own line (default: true) -->
@@ -766,6 +766,10 @@ Additionally, `editorConfigOverride` options will override what's supplied in `.
   <normalizeOrderedListMarkers>false</normalizeOrderedListMarkers>   <!-- 1. -> . (default: false) -->
   <ensureHeadingBlankLines>true</ensureHeadingBlankLines>       <!-- blank line before/after headings (default: true) -->
   <ensureSourceDelimiters>false</ensureSourceDelimiters>        <!-- wrap [source] in ---- (default: false) -->
+  <formatTables>true</formatTables>                  <!-- format AsciiDoc tables (default: true) -->
+  <tableLayout>AUTO</tableLayout>                   <!-- AUTO, EXPANDED, PRESERVE (default: AUTO) -->
+  <tableMaxLineWidth>120</tableMaxLineWidth>         <!-- max line width for compact table layout (default: 120) -->
+  <tableBlankLines>ALL</tableBlankLines>             <!-- NONE, HEADER, ALL, PRESERVE (default: ALL) -->
 </adocfmt>
 ```
 
@@ -1963,6 +1967,25 @@ Some files have fixed header lines (e.g. `<?xml version="1.0" ...` in XMLs, or `
 
 To define what lines to skip at the beginning of such files, fill the `skipLinesMatching` option with a regular expression that matches them (e.g. `<skipLinesMatching>^#!.+?$</skipLinesMatching>` to skip shebangs).
 
+### Skip headers and multiple license headers
+
+Sometimes it may be necessary to disable a license rule for specific files, or to maintain dual licenses.
+
+To define alternate replacements: 
+
+```xml
+<licenseHeader>
+    <name>PrimaryHeaderLicense</name>
+    <content>/** Base License Header */</content>
+    <onlyIfContentMatches>Best</onlyIfContentMatches>
+</licenseHeader>
+<licenseHeader>
+  <name>SecondaryHeaderLicense</name>
+  <content>/** Alternate License Header */</content>
+  <onlyIfContentMatches>.*Test.+</onlyIfContentMatches>
+</licenseHeader>
+```
+
 <a name="invisible"></a>
 
 <a name="ratchet"></a>
@@ -2081,12 +2104,23 @@ You can easily set the line endings of different files using [a `.gitattributes`
 
 <a name="enforceCheck"></a>
 
-## Disabling warnings and error messages
+## Disabling Spotless goals
 
-By default, `spotless:check` is bound to the `verify` phase.  You might want to disable this behavior.  We [recommend against this](https://github.com/diffplug/spotless/issues/79#issuecomment-290844602), but it's easy to do if you'd like:
+By default, `spotless:check` is bound to the `verify` phase. You might want to disable Spotless for some builds. We [recommend against this](https://github.com/diffplug/spotless/issues/79#issuecomment-290844602), but the following properties are available:
 
-- set `-Dspotless.check.skip=true` at the command line
-- set `spotless.check.skip` to `true` in the `<properties>` section of the `pom.xml`
+| Property | Scope | Effect |
+| --- | --- | --- |
+| `spotless.skip` | `spotless:check` and `spotless:apply` | Skips both formatting goals |
+| `spotless.check.skip` | `spotless:check` only | Skips only the check goal |
+| `spotless.apply.skip` | `spotless:apply` only | Skips only the apply goal |
+
+You can set them at the command line or in the `<properties>` section of the `pom.xml`:
+
+- `-Dspotless.skip=true` / `<spotless.skip>true</spotless.skip>` — skip both `spotless:check` and `spotless:apply`
+- `-Dspotless.check.skip=true` / `<spotless.check.skip>true</spotless.check.skip>` — skip only `spotless:check` (including when it is bound to `verify`)
+- `-Dspotless.apply.skip=true` / `<spotless.apply.skip>true</spotless.apply.skip>` — skip only `spotless:apply`
+
+`spotless.check.skip` does **not** skip `spotless:apply`, and `spotless.apply.skip` does **not** skip `spotless:check`. Use `spotless.skip` when you want both. These properties do **not** affect `spotless:install-git-pre-push-hook`.
 
 ### Suppressing lint errors
 
