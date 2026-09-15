@@ -3,10 +3,17 @@
 We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (starting after version `3.27.0`).
 
 ## [Unreleased]
+### Changes
+- Generate formatter defaults from version catalog. ([#3045](https://github.com/diffplug/spotless/pull/3045))
+- Bump default `gson` version `2.13.2` -> `2.14.0`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
+- Bump default `zjsonpatch` version `0.4.14` -> `0.4.16`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
+- Bump default `jackson-dataformat-yaml` version `2.14.1` -> `2.20.1`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
+- Bump default `ktfmt` version to latest `0.63` -> `0.64`. ([2988](https://github.com/diffplug/spotless/pull/2988))
 
 ### Fixed
 - `versionCatalog()` preserves entries when comments contain unmatched brackets, preserves commas inside quoted strings, and keeps significant line boundaries in multiline entries. ([#3042](https://github.com/diffplug/spotless/pull/3042))
 - `versionCatalog()` now reports unfinished entries as lints at their starting line. These fail formatting by default, so upgrading may expose catalog errors that previously caused silent data loss. ([#3042](https://github.com/diffplug/spotless/pull/3042))
+- Stop calling deprecated `Configuration.setVisible` from Gradle 9.0.0 ([#3053](https://github.com/diffplug/spotless/pull/3053))
 
 ## [8.10.2] - 2026-09-04
 ### Fixed
