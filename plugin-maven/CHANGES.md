@@ -9,6 +9,11 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 - Bump default `zjsonpatch` version `0.4.14` -> `0.4.16`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
 - Bump default `jackson-dataformat-yaml` version `2.14.1` -> `2.20.1`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
 - Bump default `ktfmt` version to latest `0.63` -> `0.64`. ([2988](https://github.com/diffplug/spotless/pull/2988))
+- Bump default `cleanthat` version `2.25` -> `2.26`. ([#2882](https://github.com/diffplug/spotless/pull/2882))
+- Bump default `jackson` version `2.20.1` -> `2.22.2`. ([#2819](https://github.com/diffplug/spotless/pull/2819))
+- Bump default `javaparser` version `3.27.1` -> `3.28.2`. ([#3065](https://github.com/diffplug/spotless/pull/3065))
+- Bump default `palantir-java-format` version `2.80.0` -> `2.98.0`. ([#3068](https://github.com/diffplug/spotless/pull/3068))
+- Bump default `scalafmt` version `3.8.1` -> `3.11.5`. ([#2173](https://github.com/diffplug/spotless/pull/2173))
 
 ### Fixed
 - `<versionCatalog>` preserves entries when comments contain unmatched brackets, preserves commas inside quoted strings, and keeps significant line boundaries in multiline entries. ([#3042](https://github.com/diffplug/spotless/pull/3042))

@@ -5,10 +5,24 @@
   ],
   packageRules: [
     {
+      enabled: false,
+      matchPackageNames: [
+        'org.apache.maven:*',
+        'org.apache.maven.plugin-tools:*',
+      ],
+    },
+    {
+      enabled: false,
+      matchPackageNames: [
+        'com.palantir.javaformat:palantir-java-format',
+      ],
+      matchCurrentVersion: '<= 1.1.0',
+    },
+    {
       groupName: 'Ktlint',
       matchPackageNames: [
         'com.pinterest.ktlint:*',
-      ]
+      ],
     },
     {
       groupName: 'OpenRewrite',
@@ -16,5 +30,5 @@
         'org.openrewrite.recipe:*',
       ],
     },
-  ]
+  ],
 }
