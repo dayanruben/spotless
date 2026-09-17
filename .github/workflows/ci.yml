@@ -39,10 +39,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        jre: [ 17, 21, 24 ] # Test on all supported LTS and latest JDK.
+        jre: [ 17, 21, 25, 26 ] # Test on all supported LTS and latest JDK.
         include:
           - os: windows-latest
-            jre: 24 # Test on the latest JDK for speeds.
+            jre: 26 # Test on the latest JDK for speeds.
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
@@ -67,10 +67,10 @@ jobs:
       fail-fast: false
       matrix:
         os: [ ubuntu-latest ]
-        jre: [ 17, 21, 24 ] # Test on all supported LTS and latest JDK.
+        jre: [ 17, 21, 25, 26 ] # Test on all supported LTS and latest JDK.
         include:
           - os: windows-latest
-            jre: 24 # Test on the latest JDK for speeds.
+            jre: 26 # Test on the latest JDK for speeds.
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v7
@@ -183,3 +183,26 @@ jobs:
             exit 1
           fi
           echo "All required jobs completed successfully."
+
+  publish-snapshots:
+    name: Publish Snapshots
+    needs: final-status
+    if: github.event.repository.fork == false && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    env:
+      ORG_GRADLE_PROJECT_nexus_user: ${{ secrets.NEXUS_USER }}
+      ORG_GRADLE_PROJECT_nexus_pass64: ${{ secrets.NEXUS_PASS64 }}
+      ORG_GRADLE_PROJECT_gpg_passphrase: ${{ secrets.GPG_PASSPHRASE }}
+      ORG_GRADLE_PROJECT_gpg_key64: ${{ secrets.GPG_KEY64 }}
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-java@v6
+        with:
+          distribution: "temurin"
+          java-version: 21
+      - uses: gradle/actions/setup-gradle@v6
+        with:
+          cache-read-only: true
+      - run: ./gradlew publishToMavenCentral --no-configuration-cache
