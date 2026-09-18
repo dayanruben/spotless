@@ -211,25 +211,14 @@ pluginManagement {
 
 ### Gradle - snapshot builds
 
-Snapshot builds are automatically published to Maven Central Snapshots on every commit to `main`. In any project, you can use the following snippet in your `settings.gradle` (for Gradle 6.0+).
-
-```gradle
-pluginManagement {
-  repositories {
-    maven {
-      url 'https://central.sonatype.com/repository/maven-snapshots/'
-      content {
-        includeGroup 'com.diffplug.spotless'
-      }
-    }
-    gradlePluginPortal()
-  }
-}
-```
+Nothing is published automatically -- a push to any branch cannot publish anything. A maintainer can
+publish a snapshot by hand with the `release-snapshot` workflow, which we use to exercise publishing
+and signing before a release, so don't count on any particular snapshot existing. To test an
+unreleased change, use the local workflow above.
 
 ### Maven
 
-Run `./gradlew publishToMavenLocal` to publish this to your local repository. You can also use snapshot artifacts from `https://central.sonatype.com/repository/maven-snapshots/`.
+Run `./gradlew publishToMavenLocal` to publish this to your local repository.
 
 ## License
 

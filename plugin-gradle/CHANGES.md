@@ -8,19 +8,22 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 - Bump default `gson` version `2.13.2` -> `2.14.0`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
 - Bump default `zjsonpatch` version `0.4.14` -> `0.4.16`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
 - Bump default `jackson-dataformat-yaml` version `2.14.1` -> `2.20.1`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
-- Bump default `ktfmt` version to latest `0.63` -> `0.64`. ([2988](https://github.com/diffplug/spotless/pull/2988))
+- Bump default `ktfmt` version `0.63` -> `0.64`. ([2988](https://github.com/diffplug/spotless/pull/2988))
 - Bump default `cleanthat` version `2.25` -> `2.26`. ([#2882](https://github.com/diffplug/spotless/pull/2882))
 - Bump default `jackson` version `2.20.1` -> `2.22.2`. ([#2819](https://github.com/diffplug/spotless/pull/2819))
 - Bump default `javaparser` version `3.27.1` -> `3.28.2`. ([#3065](https://github.com/diffplug/spotless/pull/3065))
 - Bump default `palantir-java-format` version `2.80.0` -> `2.98.0`. ([#3068](https://github.com/diffplug/spotless/pull/3068))
 - Bump default `scalafmt` version `3.8.1` -> `3.11.5`. ([#2173](https://github.com/diffplug/spotless/pull/2173))
 - Bump default `google-java-format` version `1.30.0` -> `1.36.1`. ([#3075](https://github.com/diffplug/spotless/pull/3075))
+- Bump default `gherkin-utils` version `10.0.0` -> `12.0.2`. ([#2979](https://github.com/diffplug/spotless/pull/2979))
+- We no longer publish a plugin marker for the legacy `com.diffplug.gradle.spotless` id, which has been redirecting to `com.diffplug.spotless` since 4.0. Builds that still request it now fail with `Plugin [id: 'com.diffplug.gradle.spotless'] was not found` instead of the migration message. ([#3086](https://github.com/diffplug/spotless/pull/3086))
 
 ### Fixed
 - `versionCatalog()` preserves standalone comments at section boundaries and the end of the file. ([#3048](https://github.com/diffplug/spotless/issues/3048))
 - `versionCatalog()` preserves entries when comments contain unmatched brackets, preserves commas inside quoted strings, and keeps significant line boundaries in multiline entries. ([#3042](https://github.com/diffplug/spotless/pull/3042))
 - `versionCatalog()` now reports unfinished entries as lints at their starting line. These fail formatting by default, so upgrading may expose catalog errors that previously caused silent data loss. ([#3042](https://github.com/diffplug/spotless/pull/3042))
 - Stop calling deprecated `Configuration.setVisible` from Gradle 9.0.0 ([#3053](https://github.com/diffplug/spotless/pull/3053))
+- Eclipse JDT formatter step no longer fails with `NoClassDefFoundError` or `NoSuchMethodError` when lombok is active as a JVM agent (e.g. `-javaagent:lombok.jar` in Eclipse/VS Code/Cursor). ([#2795](https://github.com/diffplug/spotless/issues/2795))
 
 ## [8.10.2] - 2026-09-04
 ### Fixed
