@@ -3,6 +3,8 @@
 We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (starting after version `3.27.0`).
 
 ## [Unreleased]
+
+## [8.10.3] - 2026-09-25
 ### Changes
 - Generate formatter defaults from version catalog. ([#3045](https://github.com/diffplug/spotless/pull/3045))
 - Bump default `gson` version `2.13.2` -> `2.14.0`. ([#3045](https://github.com/diffplug/spotless/pull/3045))
@@ -19,6 +21,10 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 - We no longer publish a plugin marker for the legacy `com.diffplug.gradle.spotless` id, which has been redirecting to `com.diffplug.spotless` since 4.0. Builds that still request it now fail with `Plugin [id: 'com.diffplug.gradle.spotless'] was not found` instead of the migration message. ([#3086](https://github.com/diffplug/spotless/pull/3086))
 
 ### Fixed
+- Fix release signing by using Gradle's required eight-digit signing subkey ID. ([#3105](https://github.com/diffplug/spotless/pull/3105))
+- Fix race when creating the npm install cache directory. (([#3096](https://github.com/diffplug/spotless/pull/3096))
+- GrEclipse no longer emits expected OSGi and nested-jar warnings during initialization. ([#2445](https://github.com/diffplug/spotless/issues/2445))
+- `typescript` `prettier()` no longer emits a warning when its parser is already set to `typescript`. ([#3098](https://github.com/diffplug/spotless/pull/3098))
 - `versionCatalog()` preserves standalone comments at section boundaries and the end of the file. ([#3048](https://github.com/diffplug/spotless/issues/3048))
 - `versionCatalog()` preserves entries when comments contain unmatched brackets, preserves commas inside quoted strings, and keeps significant line boundaries in multiline entries. ([#3042](https://github.com/diffplug/spotless/pull/3042))
 - `versionCatalog()` now reports unfinished entries as lints at their starting line. These fail formatting by default, so upgrading may expose catalog errors that previously caused silent data loss. ([#3042](https://github.com/diffplug/spotless/pull/3042))
