@@ -8,8 +8,8 @@ output = [
   ].join('\n');
 -->
 [![MavenCentral](https://img.shields.io/badge/mavencentral-com.diffplug.spotless%3Aspotless--maven--plugin-blue.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.diffplug.spotless%22%20AND%20a%3A%22spotless-maven-plugin%22)
-[![Changelog](https://img.shields.io/badge/changelog-3.10.3-blue.svg)](CHANGES.md)
-[![Javadoc](https://img.shields.io/badge/javadoc-here-blue.svg)](https://javadoc.io/doc/com.diffplug.spotless/spotless-maven-plugin/3.10.3/index.html)
+[![Changelog](https://img.shields.io/badge/changelog-3.10.4-blue.svg)](CHANGES.md)
+[![Javadoc](https://img.shields.io/badge/javadoc-here-blue.svg)](https://javadoc.io/doc/com.diffplug.spotless/spotless-maven-plugin/3.10.4/index.html)
 <!---freshmark /shields -->
 
 <!---freshmark javadoc
@@ -575,7 +575,7 @@ Groovy-Eclipse formatting errors/warnings lead per default to a build failure. T
 
 ### ktfmt
 
-[homepage](https://github.com/facebook/ktfmt). [changelog](https://github.com/facebook/ktfmt/releases). [code](https://github.com/diffplug/spotless/blob/main/plugin-maven/src/main/java/com/diffplug/spotless/maven/kotlin/Ktfmt.java).
+[homepage](https://github.com/Kotlin/ktfmt). [changelog](https://github.com/Kotlin/ktfmt/releases). [code](https://github.com/diffplug/spotless/blob/main/plugin-maven/src/main/java/com/diffplug/spotless/maven/kotlin/Ktfmt.java).
 
 ```xml
 <ktfmt>

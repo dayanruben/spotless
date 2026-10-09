@@ -4,17 +4,22 @@ We adhere to the [keepachangelog](https://keepachangelog.com/en/1.0.0/) format (
 
 ## [Unreleased]
 
+## [3.10.4] - 2026-10-08
+
 ### Changes
 - Bump default `eclipse` version from `4.40` to `4.41`.
 - Bump default `gherkin` version `42.0.0` -> `42.0.1`. ([#3088](https://github.com/diffplug/spotless/pull/3088))
 - Bump default `jackson` version `2.22.2` -> `2.22.3`. ([#3101](https://github.com/diffplug/spotless/pull/3101))
-- Bump default `palantir-java-format` version `2.98.0` -> `2.99.0`. ([#3103](https://github.com/diffplug/spotless/pull/3103))
 - Bump default `mockito-core` version `5.23.0` -> `5.24.0`. ([#3106](https://github.com/diffplug/spotless/pull/3106))
 - Bump default `greclipse` version to latest `4.40` -> `4.41`. ([#3123](https://github.com/diffplug/spotless/pull/3123))
+- Bump default `ktfmt` version `0.64` -> `0.65`. ([#3135](https://github.com/diffplug/spotless/pull/3135))  
+  Which moved to the `org.jetbrains.kotlinx:ktfmt` coordinate and `org.jetbrains.kotlinx.ktfmt` package. Older versions are still supported.
+- Bump default `palantir-java-format` version `2.99.0` -> `2.102.0`. ([#3132](https://github.com/diffplug/spotless/pull/3132))
 
 ### Fixed
 - Migrate Plexus component injection to JSR-330 and Maven parameter. ([#3122](https://github.com/diffplug/spotless/pull/3122))
 - `shortenFullyQualifiedTypes` leaves a qualified name alone when the enclosing type extends or implements a type that is not in the same file, so an inherited member type cannot take the simple name. ([#3117](https://github.com/diffplug/spotless/issues/3117))
+- `expandWildcardImports` no longer drops the import of a type that is only used to qualify a static member (such as `Collections.sort(list)` or `TimeUnit.SECONDS`), or the static import of a field or enum constant (such as `PI` from `import static java.lang.Math.*`), which produced code that did not compile. ([#2833](https://github.com/diffplug/spotless/issues/2833))
 
 ## [3.10.3] - 2026-09-25
 ### Changes
